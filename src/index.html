@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <form class="addtext toDo">
+    <input type="text" class="task text" name="name"><br>
+    <input type="button" class="Add" value="Add">
+    <input type="button" class="X" value="X">
+  </form>
+  <form class="addtext progress">
+    <input type="text" class="task text"><br>
+    <input type="button" class="Add" value="Add">
+    <input type="button" class="X" value="X">
+  </form>
+  <form class="addtext done">
+    <input type="text" class="text"><br>
+    <input type="button" class="Add" value="Add">
+    <input type="button" class = "X" value="X">
+  </form>
+<div class="container">
+  <div class="block">
+    <h1 class="action">TODO</h1>
+    <div class="task">
+      Отображение input type = file в браузере обладает некоторыми недостатками: сложно стилизовать, по разному выглядит в разных браузерах
+      Поэтому input type = file часто скрывают и перекрывают другими элементами интерфейса.
+      <span class="cross"></span>
+    </div>
+    <div class="task">
+      Чтобы при перекрытии функциональность не пострадала можно выставить атрибут pointer-events в значение none.
+      <span class="cross"></span>
+    </div>
+    <div class="task">
+      При mousedown клонируем элемент и привязываем к указателю мыши. При mouseup определяем, куда кинули элемент, и устанавливаем родителя
+      <span class="cross"></span>
+    </div>
+    <div class="task">
+      input type = file требует для активации поведения по умолчанию именно MouseEvent , а не Event
+      <span class="cross"></span>
+    </div>
+    <div class="task">
+      Если вы вызовете новое событие с помощью метода DispatchEvent просто так в произвольном месте кода, то событие не отправится, потому что вызов события click возможен только в том случае, если пользователь кликал куда-то в рамках текущей веб-страницы не позднее, чем ~5 секунд назад
+      <span class="cross"></span>
+    </div>
+    <div class="addtask_first but">+ Add task</div>
+  </div>
+  <div class="block">
+    <h1 class="action">PROGRESS</h1>
+    <div class="task">
+      События которые возникают вследствие действий пользователя, и события которые генерируются программно отличаются друг от друга: isTrusted (true) ㄧ индикатор событий, исходящих от браузера, isnotTrusted (false) ㄧ индикатор событий, которые генерируются программно
+      <span class="cross"></span>
+    </div>
+    <div class="task">
+      Внутри объекта узла находится поле files. Значением этого поля является массив FileList, в котором лежит прикрепленный пользователем файл.
+      Файл имеет свойства: имя, размер, тип, дату изменения и т.п.
+      <span class="cross"></span>
+    </div>
+    <div class="task">
+      FileReader является частью File API браузера и получить его можно, если вызвать конструктор с префиксом new.
+      <span class="cross"></span>
+    </div>
+    <div class="addtask_second but">+ Add task</div>
+  </div>
+  <div class="block">
+    <h1 class="action">DONE</h1>
+    <div class="task">
+      Drag and drop в Web традиционно делится на две реализации: имитация с помощью событий мыши/touch (перетаскивание элементов внутри веб-страницы), Drag and drop API (перетаскивание чего-либо снаружи внутрь окна браузера)
+      <span class="cross"></span>
+    </div>
+    <div class="addtask_third but">+ Add task</div>
+  </div>
+</div>
+</body>
+</html>

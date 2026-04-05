@@ -1,0 +1,154 @@
+body {
+    color: black;
+    position: relative;
+    display: flex;             
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    background-color: cornflowerblue;
+    justify-content: space-around;
+    width: 65%;
+    max-height: 600px;
+    /* margin-left: 16%; */
+   
+}
+h1 {
+    text-align: center;
+}
+
+.block {
+    display: flex;
+    flex-direction: column;
+    background-color: aliceblue;
+    width: 30%;
+    margin-bottom: 5%;
+    margin-top: 2%;
+    overflow-y: auto;
+    /* overflow-y: scroll; */
+    padding-right: 1%;
+  
+}
+
+.task {
+    width: 90%;
+    background-color: white;
+    padding: 1% 3%;
+    margin: 3%;
+    position: relative;
+    z-index: 0;
+}
+
+.cross {
+    position: absolute;
+    top: -7px; /* Отступ сверху */
+    right: 2px; /* Отступ справа */
+    display: none; /* Скрываем крестик по умолчанию */
+    color: cornflowerblue;
+    font-size: 20px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  /* Добавляем сам крестик через контент */
+.cross::after {
+    content: "\00D7"; 
+  }
+  
+  /* Показываем крестик при наведении на контейнер */
+  .task:hover .cross {
+    display: block;
+  }
+
+input[type="button"] {
+    border: 1px solid rgb(217, 208, 208);
+    width: 35%;
+    margin: 3%;
+}
+
+input[type="text"]  {
+    min-height: 100px;
+    border: 1px solid rgb(217, 208, 208);
+    width: 90%;
+    padding: 0;
+    
+}
+
+.addtask_first {
+    position: absolute;
+    left: 20%;
+    bottom: 1%; 
+}
+
+.addtask_first:hover, .addtask_second:hover, .addtask_third:hover {
+    cursor: pointer;
+}
+
+
+.addtask_second {
+    left: 42%; 
+    position: absolute;
+    bottom: 1%; 
+}
+
+.addtask_third {
+    left: 64%;
+    position: absolute;
+    bottom: 1%; 
+}
+
+.progress {
+    left: 40%; 
+}
+.done {
+    left: 60.5%;
+}
+
+.toDo {
+    left: 18%;
+}
+
+.addtext {
+    display: none;
+    position: absolute;
+    bottom: 2%; 
+    background-color: aliceblue;
+    width: 22%;
+    padding: 5px;
+    border: 2px dotted cornflowerblue;
+    box-sizing: border-box;
+    z-index: 9999;
+    
+}
+
+.task.dragged {
+    border-radius: 10px;
+    opacity: 50%;
+    position: absolute;
+    /* z-index: 1; */
+    /* pointer-events: none; */
+    background: #fff;
+    pointer-events: none;
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+    padding: 0%;
+    margin: 0%;
+}
+
+.task:hover {
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab; 
+}
+
+.addtext:hover .text:hover {
+    cursor: crosshair;
+}
+
+.text {
+    cursor: auto;
+}
+
