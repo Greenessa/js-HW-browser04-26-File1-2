@@ -33,15 +33,6 @@ export default class ManageTask {
     // this.storage.clearStorage();
   }
 
-  removeTasks(blockEl) {
-    let taskEls = blockEl.querySelectorAll(".task");
-    if (taskEls) {
-      for (const t of taskEls) {
-        t.remove();
-      }
-    }
-  }
-
   createTaskEl(elAdd, arrayState) {
     for (const task of arrayState) {
       let newTaskEl = document.createElement("div");
@@ -66,68 +57,78 @@ export default class ManageTask {
     this.createTaskEl(this.addTaskElThird, this.currentState.taskArrayDone);
   }
 
-  overwriteTasks() {
-    let arrayToDo = this.blockEl.querySelectorAll(".task");
-    this.currentState.taskArrayToDo = [];
-    for (const el of arrayToDo) {
-      this.currentState.taskArrayToDo.push(el.textContent);
+  removeTasks(blockEl) {
+    let taskEls = blockEl.querySelectorAll(".task");
+    if (taskEls) {
+      for (const t of taskEls) {
+        t.remove();
+      }
     }
-    let arrayProgress = this.blockElSecond.querySelectorAll(".task");
-    this.currentState.taskArrayProgress = [];
-    for (const el1 of arrayProgress) {
-      this.currentState.taskArrayProgress.push(el1.textContent);
+  }
+ 
+  addListeners() {
+    this.addCloseFormListeners();
+    this.addSubmitTaskListeners();
+    this.addContainerMouseListeners();
+  }
+
+  addCloseFormListeners() {
+    const closeButtons = document.querySelectorAll(".X");
+    for (const button of closeButtons) {
+      button.addEventListener("click", () => {
+        const form = button.closest(".addtext");
+        this.closeForm(form);
+      });
     }
-    let arrayDone = this.blockElThird.querySelectorAll(".task");
-    this.currentState.taskArrayDone = [];
-    for (const el2 of arrayDone) {
-      this.currentState.taskArrayDone.push(el2.textContent);
+  }
+  
+  closeForm(form) {
+    form.style.display = "none";
+    form.querySelector(".text").value = "";
+  }
+
+  addSubmitTaskListeners() {
+    const addButtons = document.querySelectorAll(".Add");
+    const textInputs = document.querySelectorAll(".text");
+    for (const button of addButtons) {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        const form = button.closest(".addtext");
+        this.addTaskFromForm(form);
+      });
+    }
+    for (const input of textInputs) {
+      input.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        const form = input.closest(".addtext");
+        this.addTaskFromForm(form);
+      });
     }
   }
 
-  addListeners() {
-    const butNoneArray = document.querySelectorAll(".X");
-    for (const but of butNoneArray) {
-      but.addEventListener("click", () => {
-        const form = but.closest(".addtext");
-        form.style.display = "none";
-        form.querySelector(".text").value = "";
-      });
+  addTaskFromForm(form) {
+    const input = form.querySelector(".text");
+    const value = input.value.trim();
+    if (value === "") {
+      this.closeForm(form);
+      return;
     }
-
-    let butAddArray = document.getElementsByClassName("Add");
-    for (const button of butAddArray) {
-      button.addEventListener("click", (e) => {
-        e.preventDefault();
-        const form = button.closest(".addtext");
-        let newTaskEl = document.createElement("div");
-        newTaskEl.classList.add("task");
-        let textEl = e.target.previousElementSibling.previousElementSibling;
-        console.log("textEl", textEl.value);
-        newTaskEl.textContent = textEl.value;
-        let newEl = document.createElement("span");
-        newEl.classList.add("cross");
-        newTaskEl.insertAdjacentElement("beforeend", newEl);
-        if (textEl.value.trim() !== "") {
-          if (form.classList.contains("toDo")) {
-            console.log("addTaskEl", this.addTaskEl);
-            this.currentState.taskArrayToDo.push(textEl.value);
-            this.addCurrentTask();
-          }
-          if (form.classList.contains("progress")) {
-            this.currentState.taskArrayProgress.push(textEl.value);
-            this.addCurrentTask();
-          }
-          if (form.classList.contains("done")) {
-            this.currentState.taskArrayDone.push(textEl.value);
-            this.addCurrentTask();
-          }
-          this.storage.setInStorage(this.currentState);
-        }
-        form.style.display = "none";
-        form.querySelector(".text").value = "";
-      });
+    if (form.classList.contains("toDo")) {
+      this.currentState.taskArrayToDo.push(value);
     }
+    if (form.classList.contains("progress")) {
+      this.currentState.taskArrayProgress.push(value);
+    }
+    if (form.classList.contains("done")) {
+      this.currentState.taskArrayDone.push(value);
+    }
+    this.addCurrentTask();
+    this.storage.setInStorage(this.currentState);
+    this.closeForm(form);
+  }
 
+  addContainerMouseListeners() {
     this.containerEl.addEventListener("mousedown", (e) => {
       e.preventDefault();
       if (e.target.classList.contains("cross")) {
@@ -155,12 +156,10 @@ export default class ManageTask {
         console.log("что в контейнере после удаления", this.containerEl);
         return;
       }
-
       if (e.target.classList.contains("addtask_first")) {
         this.formToDoEl.style.display = "block";
         return;
       }
-
       if (e.target.classList.contains("addtask_second")) {
         this.formProgressEl.style.display = "block";
         return;
@@ -169,7 +168,6 @@ export default class ManageTask {
         this.formDoneEl.style.display = "block";
         return;
       }
-
       let taskEl = e.target.closest(".task");
       if (!taskEl) {
         return;
@@ -200,10 +198,8 @@ export default class ManageTask {
       let rect = taskEl.getBoundingClientRect();
       this.infoObj.mouseDifferLeft = e.clientX - rect.left;
       this.infoObj.mouseDiffertop = e.clientY - rect.top;
-
       this.infoObj.left = e.clientX - this.infoObj.mouseDifferLeft;
       this.infoObj.top = e.clientY - this.infoObj.mouseDiffertop;
-
       // создаём подвижную карточку
       this.ghostEl = taskEl.cloneNode(true);
       this.ghostEl.classList.add("dragged");
@@ -213,7 +209,6 @@ export default class ManageTask {
       this.ghostEl.style.left = `${e.clientX - this.infoObj.mouseDifferLeft}px`;
       this.ghostEl.style.top = `${e.clientY - this.infoObj.mouseDiffertop}px`;
       this.ghostEl.style.cursor = "grabbing";
-
       // создаём пустую карточку на месте исходной
       this.window = taskEl.cloneNode(true);
       this.window.style.maxWidth = `${width}px`;
@@ -296,7 +291,6 @@ export default class ManageTask {
       }
       // удаляем пустое окошко
       this.window.remove();
-
       // возвращаем карточку туда, откуда она была взята
       this.infoObj.nearEl.insertAdjacentElement(
         this.infoObj.position,
@@ -304,14 +298,12 @@ export default class ManageTask {
       );
       // удаляем подвижную карточку
       this.ghostEl.remove();
-
       // очищаем исходные данные
       this.ghostEl = null;
       this.draggedEl = null;
       this.window = null;
       this.infoObj = {};
     });
-
     let addEl;
     this.containerEl.addEventListener("mouseup", (evt) => {
       if (!this.draggedEl) {
@@ -337,9 +329,6 @@ export default class ManageTask {
         this.ghostEl.hidden = true;
         let underMouseEl = document.elementFromPoint(evt.clientX, evt.clientY);
         this.ghostEl.hidden = false;
-        // console.log('underMouseEl', underMouseEl);
-        // console.log('e_target', evt.target);
-
         if (
           !underMouseEl.classList.contains("block") &&
           !underMouseEl.classList.contains("task")
@@ -413,7 +402,6 @@ export default class ManageTask {
           }
         }
       }
-
       // удаляем подвижную карточку
       this.ghostEl.remove();
       // очищаем исходные данные
@@ -424,5 +412,23 @@ export default class ManageTask {
       this.overwriteTasks();
       this.storage.setInStorage(this.currentState);
     });
+  }
+
+  overwriteTasks() {
+    let arrayToDo = this.blockEl.querySelectorAll(".task");
+    this.currentState.taskArrayToDo = [];
+    for (const el of arrayToDo) {
+      this.currentState.taskArrayToDo.push(el.textContent);
+    }
+    let arrayProgress = this.blockElSecond.querySelectorAll(".task");
+    this.currentState.taskArrayProgress = [];
+    for (const el1 of arrayProgress) {
+      this.currentState.taskArrayProgress.push(el1.textContent);
+    }
+    let arrayDone = this.blockElThird.querySelectorAll(".task");
+    this.currentState.taskArrayDone = [];
+    for (const el2 of arrayDone) {
+      this.currentState.taskArrayDone.push(el2.textContent);
+    }
   }
 }
